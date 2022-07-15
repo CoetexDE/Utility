@@ -1,0 +1,4 @@
+name: Bukkit Utils
+version: '${project.version}'
+main: de.coetex.utilities.bukkitutils.BukkitUtils
+api-version: 1.19
