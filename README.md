@@ -31,19 +31,19 @@ Some advanced java utils: database api, jda commandmanager, common utils
   
   <!-- Database API -->
   <dependency>
-    <groupId>com.github.CoetexDE.Utilit</groupId>
+    <groupId>com.github.CoetexDE.Utility</groupId>
     <artifactId>database-api</artifactId>
     <version>${utilities.version}</version>
   </dependency>
   <!-- Database SQL Implementation -->
   <dependency>
-    <groupId>com.github.CoetexDE.Utilit</groupId>
+    <groupId>com.github.CoetexDE.Utility</groupId>
     <artifactId>database-sql</artifactId>
     <version>${utilities.version}</version>
   </dependency>
   <!-- Database MongoDB Implementation -->
   <dependency>
-    <groupId>com.github.CoetexDE.Utilit</groupId>
+    <groupId>com.github.CoetexDE.Utility</groupId>
     <artifactId>database-mongodb</artifactId>
     <version>${utilities.version}</version>
   </dependency>
