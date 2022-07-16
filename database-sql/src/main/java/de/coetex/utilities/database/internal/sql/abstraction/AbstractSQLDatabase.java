@@ -1,5 +1,7 @@
 package de.coetex.utilities.database.internal.sql.abstraction;
 
+import com.zaxxer.hikari.HikariConfig;
+import com.zaxxer.hikari.HikariDataSource;
 import de.coetex.utilities.database.DatabaseConfig;
 import de.coetex.utilities.database.SQLColumn;
 import de.coetex.utilities.database.action.*;
@@ -23,35 +25,61 @@ import java.util.Map;
 
 public abstract class AbstractSQLDatabase extends AbstractDatabase {
 
-	protected Connection connection;
+	private HikariDataSource dataSource;
 
 	public AbstractSQLDatabase(@Nonnull DatabaseConfig config) {
 		super(config);
 	}
 
-	@Override
-	public void disconnect0() throws Exception {
-		connection.close();
-		connection = null;
+	public Connection getConnection() {
+		try {
+			return dataSource.getConnection();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 
 	@Override
-	public void connect0() throws Exception {
-		connection = DriverManager.getConnection(createUrl(), config.getUser(), config.getPassword());
+	public void disconnect0() throws Exception {
+		if(isConnected()) {
+			dataSource.close();
+		}
+	}
+
+	@Override
+	public void connect0() {
+		HikariConfig hikariConfig = new HikariConfig();
+		hikariConfig.setUsername(config.getUser());
+		hikariConfig.setPassword(config.getPassword());
+		hikariConfig.setJdbcUrl(createUrl());
+		setDataSource(hikariConfig);
+	}
+
+	public void setDataSource(HikariConfig config) {
+		config.setMaximumPoolSize(10);
+		config.setPoolName("database-api");
+
+		config.addDataSourceProperty("cachePrepStmts",true);
+		config.addDataSourceProperty("characterEncoding","utf-8");
+		config.addDataSourceProperty("useUnicode",true);
+		config.addDataSourceProperty("allowMultiQueries",true);
+
+		config.addDataSourceProperty("ssl", true);
+		config.addDataSourceProperty("useSSL", true);
+		config.setConnectionTestQuery("SELECT 1");
+
+		this.dataSource = new HikariDataSource(config);
 	}
 
 	protected abstract String createUrl();
 
 	@Override
 	public boolean isConnected() {
-		try {
-			if (connection == null) return false;
-			connection.isClosed();
-			return true;
-		} catch (SQLException ex) {
-			LOGGER.error("Could not check connection state: " + ex.getMessage());
-			return false;
-		}
+		try{
+			return dataSource != null && !(dataSource.isClosed()) ;
+		}catch (Exception ignored){}
+		return false;
 	}
 
 	@Override
@@ -127,7 +155,7 @@ public abstract class AbstractSQLDatabase extends AbstractDatabase {
 	@Nonnull
 	public PreparedStatement prepare(@Nonnull CharSequence command, @Nonnull Object... args) throws SQLException, DatabaseException {
 		checkConnection();
-		PreparedStatement statement = connection.prepareStatement(command.toString());
+		PreparedStatement statement = getConnection().prepareStatement(command.toString());
 		SQLHelper.fillParams(statement, args);
 		return statement;
 	}

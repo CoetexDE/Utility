@@ -80,7 +80,7 @@ public abstract class AbstractDatabase implements Database {
 	@Nonnull
 	@Override
 	public SpecificDatabase getSpecificDatabase(@Nonnull String name) {
-		return new de.coetex.utilities.database.internal.abstraction.DefaultSpecificDatabase(this, name);
+		return new DefaultSpecificDatabase(this, name);
 	}
 
 	@Nonnull
