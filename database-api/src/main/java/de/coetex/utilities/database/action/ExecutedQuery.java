@@ -7,6 +7,7 @@ import de.coetex.utilities.common.logging.LogLevel;
 import javax.annotation.CheckReturnValue;
 import javax.annotation.Nonnull;
 import java.io.PrintStream;
+import java.sql.ResultSetMetaData;
 import java.util.*;
 import java.util.function.IntFunction;
 import java.util.function.Predicate;
@@ -42,6 +43,10 @@ public interface ExecutedQuery extends Iterable<Document> {
 	@Nonnull
 	@CheckReturnValue
 	Stream<Document> all();
+
+	@Nonnull
+	@CheckReturnValue
+	ResultSetMetaData metaData();
 
 	@Nonnull
 	@CheckReturnValue

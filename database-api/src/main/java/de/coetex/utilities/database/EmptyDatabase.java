@@ -193,7 +193,7 @@ public class EmptyDatabase implements Database {
 		@Nonnull
 		@Override
 		public ExecutedQuery execute() throws DatabaseException {
-			return new DefaultExecutedQuery(Collections.emptyList());
+			return new DefaultExecutedQuery(Collections.emptyList(), null);
 		}
 
 		@Nonnull

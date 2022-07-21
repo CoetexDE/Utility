@@ -5,6 +5,7 @@ import de.coetex.utilities.database.action.ExecutedQuery;
 
 import javax.annotation.Nonnull;
 import java.io.PrintStream;
+import java.sql.ResultSetMetaData;
 import java.util.*;
 import java.util.function.IntFunction;
 import java.util.function.Predicate;
@@ -14,9 +15,11 @@ import java.util.stream.Stream;
 public class DefaultExecutedQuery implements ExecutedQuery {
 
 	protected final List<Document> results;
+	protected final ResultSetMetaData metaData;
 
-	public DefaultExecutedQuery(@Nonnull List<Document> results) {
+	public DefaultExecutedQuery(@Nonnull List<Document> results, ResultSetMetaData metaData) {
 		this.results = results;
+		this.metaData = metaData;
 	}
 
 	@Nonnull
@@ -37,6 +40,12 @@ public class DefaultExecutedQuery implements ExecutedQuery {
 	@Override
 	public Stream<Document> all() {
 		return results.stream();
+	}
+
+	@Nonnull
+	@Override
+	public ResultSetMetaData metaData() {
+		return metaData;
 	}
 
 	@Nonnull

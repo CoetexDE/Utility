@@ -110,7 +110,7 @@ public class MongoDBQuery implements DatabaseQuery {
 			results.add(new MongoDBResult(document));
 		}
 
-		return new DefaultExecutedQuery(results);
+		return new DefaultExecutedQuery(results, null);
 	}
 
 	@Override
